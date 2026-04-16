@@ -10,7 +10,13 @@ authors:
 
 ![ROCm Kernel Skill](assets/rocm-kernel-skill/meme.png)
 
-tl;dr: We built an agent skill that teaches coding agents how to write optimized Triton kernels for AMD GPUs. We tested it on two fundamentally different architectures — **MI355X** (CDNA3+, datacenter) and **R9700** (RDNA4, desktop) — with four kernel types. All passed correctness checks. R9700 reached **3.97x** peak kernel speedup with **79.5%** bandwidth utilization; MI355X delivered **25%** end-to-end speedup on LTX-Video. No CUDA required.
+tl;dr: We built an agent skill that helps coding agents write optimized Triton kernels for AMD GPUs.
+
+- Tested on **MI355X** (CDNA3+, datacenter) and **R9700** (RDNA4, desktop)
+- Covers four kernel types, all passing correctness checks
+- Up to **3.97x** peak kernel speedup on R9700
+- **25%** end-to-end speedup on LTX-Video on MI355X
+- No CUDA required
 
 We recently released a [CUDA kernel skill](https://huggingface.co/blog/custom-cuda-kernels-agent-skills) that teaches coding agents to write production NVIDIA kernels. Now we are bringing the same capability to AMD — but this is not a port. AMD kernel development uses a different language, faces different constraints, and targets fundamentally different hardware. It required a skill built from scratch.
 
