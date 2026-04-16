@@ -51,7 +51,7 @@ Autotuning `BLOCK_D` — perfectly safe on NVIDIA — produces **silently wrong 
 | Memory BW | 8 TB/s | 608 GB/s |
 | XCD Swizzle | Mandatory for GEMM | Not needed |
 
-Wave64 vs Wave32 changes how reductions work. XCD Swizzle is mandatory on MI355X — without it, GEMM blocks cluster on a few chiplets and waste 90%+ of the GPU — but is meaningless on R9700. One skill must teach the agent to handle both.
+Wave64 vs Wave32 changes how reductions work. MI355X also needs XCD swizzle for GEMM to spread work across chiplets, while R9700 does not. The skill has to teach the agent both patterns.
 
 ## What is in the skill
 
