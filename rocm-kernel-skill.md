@@ -24,7 +24,7 @@ We recently released a [CUDA kernel skill](https://huggingface.co/blog/custom-cu
 
 You might assume an AMD kernel skill is the CUDA skill with a few parameters changed. It is not. Three fundamental differences forced us to build a separate skill.
 
-**Different language.** The CUDA skill generates C/C++ kernel source with PyTorch C++ bindings. On AMD, we chose [Triton](https://triton-lang.org/) — a Python-native kernel language that compiles to AMD GCN/RDNA ISA via ROCm. No C++ bindings needed, no `torch_binding.cpp`, no `build.toml` with cuda-capabilities. The entire development workflow is Python end to end.
+**Different language.** The CUDA skill generates C/C++ kernels with PyTorch bindings. The ROCm skill uses [Triton](https://triton-lang.org/), a Python-native kernel language that compiles through ROCm. That means a fully Python workflow, with no C++ bindings or `torch_binding.cpp` step.
 
 **Different constraints.** ROCm's Triton has restrictions that do not exist on NVIDIA:
 
