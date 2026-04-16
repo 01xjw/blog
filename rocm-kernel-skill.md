@@ -10,12 +10,11 @@ authors:
 
 ![ROCm Kernel Skill](assets/rocm-kernel-skill/meme.png)
 
-tl;dr: We built an agent skill that helps coding agents write optimized Triton kernels for AMD GPUs.
-
+tl;dr: We built an agent skill that teaches coding agents to write optimized Triton kernels for AMD GPUs.
 - Tested on **MI355X** (CDNA3+, datacenter) and **R9700** (RDNA4, desktop)
-- Covers four kernel types, all passing correctness checks
-- Up to **3.97x** peak kernel speedup on R9700
-- **25%** end-to-end speedup on LTX-Video on MI355X
+- Four kernel types (RMSNorm, RoPE 3D, GEGLU, AdaLN), all passing correctness checks
+- R9700: up to **3.97x** peak kernel speedup, **79.5%** memory bandwidth utilization
+- MI355X: **25%** end-to-end speedup on LTX-Video
 - No CUDA required
 
 We recently released a [CUDA kernel skill](https://huggingface.co/blog/custom-cuda-kernels-agent-skills) that teaches coding agents to write production NVIDIA kernels. Now we are bringing the same capability to AMD — but this is not a port. AMD kernel development uses a different language, faces different constraints, and targets fundamentally different hardware. It required a skill built from scratch.
@@ -24,7 +23,7 @@ We recently released a [CUDA kernel skill](https://huggingface.co/blog/custom-cu
 
 You might assume an AMD kernel skill is the CUDA skill with a few parameters changed. It is not. Three fundamental differences forced us to build a separate skill.
 
-**Different language.** The CUDA skill generates C/C++ kernels with PyTorch bindings. The ROCm skill uses [Triton](https://triton-lang.org/), a Python-native kernel language that compiles through ROCm. That means a fully Python workflow, with no C++ bindings or `torch_binding.cpp` step.
+**Different language.** The CUDA skill generates C/C++ kernels with PyTorch bindings. The ROCm skill uses [Triton](https://triton-lang.org/), a Python-native kernel language that compiles to GPU code via ROCm. The result: a fully Python workflow, with no C++ bindings or `torch_binding.cpp` step.
 
 **Different constraints.** ROCm's Triton has restrictions that do not exist on NVIDIA:
 
@@ -51,7 +50,7 @@ Autotuning `BLOCK_D` — perfectly safe on NVIDIA — produces **silently wrong 
 | Memory BW | 8 TB/s | 608 GB/s |
 | XCD Swizzle | Mandatory for GEMM | Not needed |
 
-Wave64 vs Wave32 changes how reductions work. MI355X also needs XCD swizzle for GEMM to spread work across chiplets, while R9700 does not. The skill has to teach the agent both patterns.
+Wave64 vs Wave32 changes how reductions work. MI355X also requires XCD swizzle to spread GEMM work across chiplets, while R9700 does not. One skill must cover both.
 
 ## What is in the skill
 
@@ -197,6 +196,8 @@ RMSNorm bandwidth: ~479 GB/s achieved (79.5% of R9700 theoretical 608 GB/s).
 </details>
 
 #### End-to-end: LTX-Video (25 frames, 480×704, 30 steps)
+
+On R9700, custom Triton kernels deliver a 14% end-to-end speedup — a solid gain for a desktop GPU with a fraction of MI355X's memory bandwidth.
 
 <details>
 <summary>Table</summary>
