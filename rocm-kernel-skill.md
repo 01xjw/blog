@@ -155,7 +155,7 @@ RMSNorm bandwidth: 3,546 GB/s achieved (44% of MI355X theoretical 8 TB/s).
 
 #### End-to-end: LTX-Video (25 frames, 480×704, 30 steps)
 
-A 25% end-to-end speedup from custom Triton kernels alone. Combined with `torch.compile`, the pipeline reaches 1.52x over baseline. Peak memory stays at 18.58 GB in all configurations.
+Custom Triton kernels alone yield a 25% end-to-end speedup. With `torch.compile`, the pipeline reaches 1.52x over baseline, while peak memory stays flat at 18.58 GB.
 
 <details>
 <summary>Table</summary>
